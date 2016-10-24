@@ -1,0 +1,8 @@
+*.apk
+*.ap_
+*.dex
+.DS_Store
+*.class
+bin/
+gen/
+local.properties
