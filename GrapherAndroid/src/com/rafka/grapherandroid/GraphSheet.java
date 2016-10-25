@@ -53,8 +53,8 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 	}
 	
 	private void drawGrid(Canvas canvas) {
-		int width = this.getWidth();
-		int height = this.getHeight();
+		float width = (float)this.getWidth();
+		float height = (float)this.getHeight();
 		FloatBuffer fb = FloatBuffer.allocate(400);
 		fb.clear();
 		
@@ -62,23 +62,46 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		float delta_x = gc.getDeltaX(), delta_y = gc.getDeltaY();
 		float gridSpanPix = gridSpan / delta_x;
 		
+		float xAyP =  y_max / delta_y; //X軸のY座標 x axis y pos
+		float yAxP = -x_min / delta_x; //Y軸のX座標 y axis x pos
+		
 		//軸の描画
-		fb.put(-x_min / delta_x);	fb.put(0.0f);
-		fb.put(-x_min / delta_x);	fb.put((float)height);
-		fb.put(0.0f);					fb.put(y_max / delta_y);
-		fb.put((float)width);		fb.put(y_max / delta_y);
+		fb.put(yAxP);		fb.put(0.0f);
+		fb.put(yAxP);		fb.put(height);
+		fb.put(0.0f);		fb.put(xAyP);
+		fb.put(width);	fb.put(xAyP);
 		paint.setStrokeWidth(3.0f);
 		canvas.drawLines(fb.array(), paint);
 		fb.clear();
 		
-		for(float i = 0.0f; i < width; i += gridSpanPix) {
+		for(float i = yAxP; i > 0.0f; i -= gridSpanPix) {
+			if (i <= 0.0f) break;
+			else if (i > width) i -= gridSpanPix * (int)((i - width) / gridSpanPix);
 			fb.put(i); fb.put(0.0f);
-			fb.put(i); fb.put((float)height);
+			fb.put(i); fb.put(height);
 		}
-		for(float i = 0.0f; i < height; i += gridSpanPix) {
-			fb.put(0.0f);			fb.put(i);
-			fb.put((float)width);	fb.put(i);
+		
+		for(float i = yAxP; i < width; i += gridSpanPix) {
+			if (i >= width) break;
+			else if (i < 0.0f) i += gridSpanPix * (int)(-i / gridSpanPix);
+			fb.put(i); fb.put(0.0f);
+			fb.put(i); fb.put(height);
 		}
+
+		for(float i = xAyP; i < height; i += gridSpanPix) {
+			if (i >= height) break;
+			else if (i < 0.0f) i += gridSpanPix * (int)(-i / gridSpanPix);
+			fb.put(0.0f);		fb.put(i);
+			fb.put(width);	fb.put(i);
+		}
+		
+		for(float i = xAyP; i > 0.0f; i -= gridSpanPix) {
+			if (i <= 0.0f) break;
+			else if (i > height) i -= gridSpanPix * (int)((i - height) / gridSpanPix);
+			fb.put(0.0f);		fb.put(i);
+			fb.put(width);	fb.put(i);
+		}
+		
 		paint.setStrokeWidth(1.0f);
 		canvas.drawLines(fb.array(), paint);
 	}
