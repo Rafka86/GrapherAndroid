@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 
 public class MainActivity extends Activity {
+	GrapherCore gc;
 	GraphSheet gs;
 	EditText et1;
 
@@ -13,8 +14,17 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		gc = new GrapherCore();
+		
 		et1 = (EditText) findViewById(R.id.editText1);
 		gs = (GraphSheet) findViewById(R.id.graphSheet1);
 		gs.setEditText(et1);
+		gs.setGraphCore(gc);
+	}
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		if(!gc.hasViewSize()) gc.setViewSize(gs.getWidth(), gs.getHeight());
 	}
 }
