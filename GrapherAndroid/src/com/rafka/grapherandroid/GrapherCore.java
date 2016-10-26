@@ -26,6 +26,14 @@ public class GrapherCore extends Observable {
 
 		Changed();
 	}
+	
+	public void addCenter(float xVal, float yVal) {
+		centerX += xVal;
+		centerY += yVal;
+		CalcArgs();
+		
+		Changed();
+	}
 
 	public float getCenterX() {
 		return centerX;

@@ -24,6 +24,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 	private EditText et1;
 
 	private float gridSpan;
+	private float tchStrtX, tchStrtY;
 
 	public GraphSheet(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -32,6 +33,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 
 		paint = new Paint();
 		gridSpan = 1.0f;
+		tchStrtX = tchStrtY = 0.0f;
 	}
 
 	public void setGraphCore(GrapherCore gc) {
@@ -144,8 +146,18 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 			float touchY = gc.getYMin() + gc.getYSize() - event.getY() * gc.getDeltaY();
 
 			switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				tchStrtX = touchX;
+				tchStrtY = touchY;
+				break;
 			case MotionEvent.ACTION_MOVE:
-				gc.setCenter(touchX, touchY);
+				gc.addCenter((touchX - tchStrtX) / (gc.getXSize() / 2.0f), (touchY - tchStrtY) / (gc.getXSize() / 2.0f));
+				break;
+			case MotionEvent.ACTION_UP:
+				tchStrtX = tchStrtY = 0.0f;
+				break;
+			case MotionEvent.ACTION_CANCEL:
+				tchStrtX = tchStrtY = 0.0f;
 				break;
 			}
 		}
