@@ -142,21 +142,28 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		sDetector.onTouchEvent(event);
 
 		if (event.getPointerCount() == 1) {
-			float touchX = gc.getXMin() + event.getX() * gc.getDeltaX();
-			float touchY = gc.getYMin() + gc.getYSize() - event.getY() * gc.getDeltaY();
+			//float touchX = gc.getXMin() + event.getX() * gc.getDeltaX();
+			//float touchY = gc.getYMin() + gc.getYSize() - event.getY() * gc.getDeltaY();
 
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				tchStrtX = touchX;
-				tchStrtY = touchY;
+				tchStrtX = event.getX();
+				tchStrtY = event.getY();
 				break;
 			case MotionEvent.ACTION_MOVE:
-				gc.addCenter((touchX - tchStrtX) / (gc.getXSize() / 2.0f), (touchY - tchStrtY) / (gc.getXSize() / 2.0f));
+				clear();
+				float moveX = (tchStrtX - event.getX()) / (gc.getViewWidth() / 2.0f);
+				float moveY = (event.getY() - tchStrtY) / (gc.getViewWidth() / 2.0f);
+				message("x:" + String.valueOf(moveX));
+				message("y:" + String.valueOf(moveY));
+				gc.addCenter(moveX, moveY);
 				break;
 			case MotionEvent.ACTION_UP:
+				clear();
 				tchStrtX = tchStrtY = 0.0f;
 				break;
 			case MotionEvent.ACTION_CANCEL:
+				clear();
 				tchStrtX = tchStrtY = 0.0f;
 				break;
 			}

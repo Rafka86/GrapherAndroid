@@ -3,6 +3,9 @@ package com.rafka.grapherandroid;
 import java.util.Observable;
 
 public class GrapherCore extends Observable {
+	private final float centerPlusLim = 500.0f;
+	private final float centerMinusLim = -500.0f;
+
 	private boolean viewSizeFlag;
 
 	private float xSize, ySize;
@@ -26,12 +29,22 @@ public class GrapherCore extends Observable {
 
 		Changed();
 	}
-	
+
 	public void addCenter(float xVal, float yVal) {
 		centerX += xVal;
 		centerY += yVal;
+		if (Math.abs(centerX) > centerPlusLim)
+			if (centerX > centerPlusLim)
+				centerX = centerPlusLim;
+			else
+				centerX = centerMinusLim;
+		if (Math.abs(centerY) > centerPlusLim)
+			if (centerY > centerPlusLim)
+				centerY = centerPlusLim;
+			else
+				centerY = centerMinusLim;
 		CalcArgs();
-		
+
 		Changed();
 	}
 
