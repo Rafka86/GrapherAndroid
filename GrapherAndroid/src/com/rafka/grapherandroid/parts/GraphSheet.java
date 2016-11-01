@@ -12,6 +12,7 @@ import com.rafka.grapherandroid.core.GrapherCore;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -30,7 +31,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 
 	private float gridSpan;
 	private float tchStrtX, tchStrtY;
-	private int graphReso = 1000;
+	private int graphReso = 100;
 	private float[] xs;
 
 	public GraphSheet(Context context, AttributeSet attrs) {
@@ -70,8 +71,10 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 
 		float x_min = gc.getXMin(), y_max = gc.getYMax();
 		float delta_x = gc.getDeltaX(), delta_y = gc.getDeltaY();
-		if(gridSpan * 2.0f > gc.getXSize()) gridSpan /= 10.0f;
-		else if (gridSpan * 20.0f < gc.getXSize()) gridSpan *= 10.0f;
+		if (gridSpan * 2.0f > gc.getXSize())
+			gridSpan /= 10.0f;
+		else if (gridSpan * 20.0f < gc.getXSize())
+			gridSpan *= 10.0f;
 		float gridSpanPix = gridSpan / delta_x;
 
 		float xAyP = y_max / delta_y; //X軸のY座標 x axis y pos
@@ -87,9 +90,10 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		fb.put(width);
 		fb.put(xAyP);
 		paint.setStrokeWidth(3.0f);
+		paint.setColor(Color.GRAY);
 		canvas.drawLines(fb.array(), paint);
 		fb.clear();
-		
+
 		//グリッドの描画
 		for (float i = yAxP; i > 0.0f; i -= gridSpanPix) {
 			if (i <= 0.0f)
@@ -141,19 +145,31 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 
 	private void drawGraphs(Canvas canvas) {
 		ArrayList<Function> list = gc.getFunctionList();
-		float step = gc.getXSize() / (float)graphReso;
-		
+		float step = gc.getXSize() / (float) graphReso;
+		FloatBuffer fb = FloatBuffer.allocate(4000);
+
 		xs[0] = gc.getXMin();
-		for(int i = 1; i < graphReso; i++)
+		for (int i = 1; i < graphReso; i++)
 			xs[i] = xs[i - 1] + step;
-		
+
 		float[] ys;
-		for(int i = 0; i < list.size(); i++) {
+		float x_base = gc.getXMin(), y_base = gc.getYMin() + gc.getYSize();
+		float delta_x = gc.getDeltaX(), delta_y = gc.getDeltaY();
+		fb.clear();
+		for (int i = 0; i < list.size(); i++) {
 			ys = list.get(i).getValues(xs, graphReso);
-			
+			for (int j = 1; j < graphReso; j++) {
+				fb.put((xs[j - 1] - x_base) / delta_x);
+				fb.put((y_base - ys[j - 1]) / delta_y);
+				fb.put((xs[j] - x_base) / delta_x);
+				fb.put((y_base - ys[j]) / delta_y);
+			}
+			paint.setStrokeWidth(2.0f);
+			paint.setColor(Color.BLUE);
+			canvas.drawLines(fb.array(), paint);
 		}
 	}
-	
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -180,7 +196,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 			case MotionEvent.ACTION_MOVE: {
 				float moveX = (tchStrtX - event.getX()) / (gc.getViewWidth() / 2.0f);
 				float moveY = (event.getY() - tchStrtY) / (gc.getViewWidth() / 2.0f);
-				gc.addCenter(moveX, moveY);
+				gc.addCenter(moveX * gridSpan, moveY * gridSpan);
 				break;
 			}
 			case MotionEvent.ACTION_UP:
@@ -200,7 +216,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		clear();
 		message(String.valueOf(1.0f + (1.0f - detector.getScaleFactor())));
 		gc.upSizeScale(1.0f + (1.0f - detector.getScaleFactor()));
-			
+
 		return true;
 	}
 

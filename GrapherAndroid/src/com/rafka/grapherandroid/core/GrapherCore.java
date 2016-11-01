@@ -10,7 +10,7 @@ public class GrapherCore extends Observable implements Observer {
 	private final float sizeMaxLim = 100.0f;
 
 	private boolean viewSizeFlag;
-	
+
 	private ArrayList<Function> fs;
 
 	private float xSize, ySize;
@@ -25,13 +25,14 @@ public class GrapherCore extends Observable implements Observer {
 		xMax = 5.0f;
 		xMin = -5.0f;
 		viewSizeFlag = false;
-		
+
+		fs = new ArrayList<Function>();
 		fs.clear();
-		
+
 		fs.add(new Function(this));
 		fs.get(0).setFunction("x^2");
 	}
-	
+
 	public ArrayList<Function> getFunctionList() {
 		return fs;
 	}
@@ -56,12 +57,13 @@ public class GrapherCore extends Observable implements Observer {
 
 	public void upSizeScale(float val) {
 		xSize *= val;
-		if(xSize > sizeMaxLim) xSize = sizeMaxLim;
+		if (xSize > sizeMaxLim)
+			xSize = sizeMaxLim;
 		CalcArgs();
-		
+
 		Changed();
 	}
-	
+
 	public float getCenterX() {
 		return centerX;
 	}
