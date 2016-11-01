@@ -79,7 +79,8 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		paint.setStrokeWidth(3.0f);
 		canvas.drawLines(fb.array(), paint);
 		fb.clear();
-
+		
+		//グリッドの描画
 		for (float i = yAxP; i > 0.0f; i -= gridSpanPix) {
 			if (i <= 0.0f)
 				break;
@@ -150,20 +151,16 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 				tchStrtX = event.getX();
 				tchStrtY = event.getY();
 				break;
-			case MotionEvent.ACTION_MOVE:
-				clear();
+			case MotionEvent.ACTION_MOVE: {
 				float moveX = (tchStrtX - event.getX()) / (gc.getViewWidth() / 2.0f);
 				float moveY = (event.getY() - tchStrtY) / (gc.getViewWidth() / 2.0f);
-				message("x:" + String.valueOf(moveX));
-				message("y:" + String.valueOf(moveY));
 				gc.addCenter(moveX, moveY);
 				break;
+			}
 			case MotionEvent.ACTION_UP:
-				clear();
 				tchStrtX = tchStrtY = 0.0f;
 				break;
 			case MotionEvent.ACTION_CANCEL:
-				clear();
 				tchStrtX = tchStrtY = 0.0f;
 				break;
 			}
@@ -175,11 +172,9 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 	@Override
 	public boolean onScale(ScaleGestureDetector detector) {
 		clear();
-		if (detector.getScaleFactor() < 1.0)
-			message("ピンチイン");
-		else
-			message("ピンチアウト");
-
+		message(String.valueOf(1.0f + (1.0f - detector.getScaleFactor())));
+		gc.upSizeScale(1.0f + (1.0f - detector.getScaleFactor()));
+			
 		return true;
 	}
 

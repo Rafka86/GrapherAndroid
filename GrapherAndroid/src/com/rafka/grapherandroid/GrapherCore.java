@@ -5,6 +5,7 @@ import java.util.Observable;
 public class GrapherCore extends Observable {
 	private final float centerPlusLim = 500.0f;
 	private final float centerMinusLim = -500.0f;
+	private final float sizeMaxLim = 10.0f;
 
 	private boolean viewSizeFlag;
 
@@ -48,6 +49,14 @@ public class GrapherCore extends Observable {
 		Changed();
 	}
 
+	public void upSizeScale(float val) {
+		xSize *= val;
+		if(xSize > sizeMaxLim) xSize = sizeMaxLim;
+		CalcArgs();
+		
+		Changed();
+	}
+	
 	public float getCenterX() {
 		return centerX;
 	}
