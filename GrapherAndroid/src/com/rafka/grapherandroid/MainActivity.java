@@ -1,5 +1,8 @@
 package com.rafka.grapherandroid;
 
+import com.rafka.grapherandroid.core.GrapherCore;
+import com.rafka.grapherandroid.parts.GraphSheet;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.EditText;

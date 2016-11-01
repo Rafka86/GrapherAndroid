@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <com.rafka.grapherandroid.GraphSheet
+    <com.rafka.grapherandroid.parts.GraphSheet
         android:id="@+id/graphSheet1"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

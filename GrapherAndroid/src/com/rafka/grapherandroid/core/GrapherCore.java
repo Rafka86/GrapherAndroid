@@ -1,11 +1,11 @@
-package com.rafka.grapherandroid;
+package com.rafka.grapherandroid.core;
 
 import java.util.Observable;
 
 public class GrapherCore extends Observable {
 	private final float centerPlusLim = 500.0f;
 	private final float centerMinusLim = -500.0f;
-	private final float sizeMaxLim = 10.0f;
+	private final float sizeMaxLim = 100.0f;
 
 	private boolean viewSizeFlag;
 

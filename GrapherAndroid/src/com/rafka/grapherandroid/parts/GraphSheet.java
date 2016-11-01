@@ -1,8 +1,11 @@
-package com.rafka.grapherandroid;
+package com.rafka.grapherandroid.parts;
 
 import java.nio.FloatBuffer;
 import java.util.Observable;
 import java.util.Observer;
+
+import com.rafka.grapherandroid.MainActivity;
+import com.rafka.grapherandroid.core.GrapherCore;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -62,6 +65,8 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 
 		float x_min = gc.getXMin(), y_max = gc.getYMax();
 		float delta_x = gc.getDeltaX(), delta_y = gc.getDeltaY();
+		if(gridSpan * 2.0f > gc.getXSize()) gridSpan /= 10.0f;
+		else if (gridSpan * 20.0f < gc.getXSize()) gridSpan *= 10.0f;
 		float gridSpanPix = gridSpan / delta_x;
 
 		float xAyP = y_max / delta_y; //X軸のY座標 x axis y pos
