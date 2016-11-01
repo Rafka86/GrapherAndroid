@@ -1,10 +1,12 @@
 package com.rafka.grapherandroid.parts;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import com.rafka.grapherandroid.MainActivity;
+import com.rafka.grapherandroid.core.Function;
 import com.rafka.grapherandroid.core.GrapherCore;
 
 import android.annotation.SuppressLint;
@@ -28,6 +30,8 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 
 	private float gridSpan;
 	private float tchStrtX, tchStrtY;
+	private int graphReso = 1000;
+	private float[] xs;
 
 	public GraphSheet(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -37,6 +41,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		paint = new Paint();
 		gridSpan = 1.0f;
 		tchStrtX = tchStrtY = 0.0f;
+		xs = new float[graphReso];
 	}
 
 	public void setGraphCore(GrapherCore gc) {
@@ -134,11 +139,27 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		canvas.drawLines(fb.array(), paint);
 	}
 
+	private void drawGraphs(Canvas canvas) {
+		ArrayList<Function> list = gc.getFunctionList();
+		float step = gc.getXSize() / (float)graphReso;
+		
+		xs[0] = gc.getXMin();
+		for(int i = 1; i < graphReso; i++)
+			xs[i] = xs[i - 1] + step;
+		
+		float[] ys;
+		for(int i = 0; i < list.size(); i++) {
+			ys = list.get(i).getValues(xs, graphReso);
+			
+		}
+	}
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
 		drawGrid(canvas);
+		drawGraphs(canvas);
 	}
 
 	@SuppressLint("ClickableViewAccessibility")

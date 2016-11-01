@@ -1,13 +1,17 @@
 package com.rafka.grapherandroid.core;
 
+import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Observer;
 
-public class GrapherCore extends Observable {
+public class GrapherCore extends Observable implements Observer {
 	private final float centerPlusLim = 500.0f;
 	private final float centerMinusLim = -500.0f;
 	private final float sizeMaxLim = 100.0f;
 
 	private boolean viewSizeFlag;
+	
+	private ArrayList<Function> fs;
 
 	private float xSize, ySize;
 	private float xMax, xMin, yMax, yMin;
@@ -21,14 +25,15 @@ public class GrapherCore extends Observable {
 		xMax = 5.0f;
 		xMin = -5.0f;
 		viewSizeFlag = false;
+		
+		fs.clear();
+		
+		fs.add(new Function(this));
+		fs.get(0).setFunction("x^2");
 	}
-
-	public void setCenter(float xVal, float yVal) {
-		centerX = xVal;
-		centerY = yVal;
-		CalcArgs();
-
-		Changed();
+	
+	public ArrayList<Function> getFunctionList() {
+		return fs;
 	}
 
 	public void addCenter(float xVal, float yVal) {
@@ -135,5 +140,11 @@ public class GrapherCore extends Observable {
 	private void Changed() {
 		this.setChanged();
 		this.notifyObservers();
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		// TODO Auto-generated method stub
+		Changed();
 	}
 }
