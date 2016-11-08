@@ -215,7 +215,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 	public boolean onScale(ScaleGestureDetector detector) {
 		clear();
 		message(String.valueOf(1.0f + (1.0f - detector.getScaleFactor())));
-		gc.upSizeScale(1.0f + (1.0f - detector.getScaleFactor()));
+		gc.mulSizeScale(1.0f + (1.0f - detector.getScaleFactor()));
 
 		return true;
 	}

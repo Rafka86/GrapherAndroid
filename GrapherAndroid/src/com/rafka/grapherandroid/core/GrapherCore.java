@@ -8,6 +8,7 @@ public class GrapherCore extends Observable implements Observer {
 	private final float centerPlusLim = 500.0f;
 	private final float centerMinusLim = -500.0f;
 	private final float sizeMaxLim = 100.0f;
+	private final float sizeMinLim = 1e-4f;
 
 	private boolean viewSizeFlag;
 
@@ -55,10 +56,12 @@ public class GrapherCore extends Observable implements Observer {
 		Changed();
 	}
 
-	public void upSizeScale(float val) {
+	public void mulSizeScale(float val) {
 		xSize *= val;
 		if (xSize > sizeMaxLim)
 			xSize = sizeMaxLim;
+		if (xSize < sizeMinLim)
+			xSize = sizeMinLim;
 		CalcArgs();
 
 		Changed();
