@@ -38,6 +38,20 @@ public class GrapherCore extends Observable implements Observer {
 		return fs;
 	}
 
+	public void addFunction() {
+		fs.add(new Function(this));
+		Changed();
+	}
+
+	public void removeFunction(int index) {
+		fs.remove(index);
+		Changed();
+	}
+
+	public Function getFunction(int index) {
+		return fs.get(index);
+	}
+
 	public void addCenter(float xVal, float yVal) {
 		centerX += xVal;
 		centerY += yVal;
