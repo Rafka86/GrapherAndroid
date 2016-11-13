@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 
 public class FunctionAdapter extends ArrayAdapter<Function> {
@@ -35,9 +36,14 @@ public class FunctionAdapter extends ArrayAdapter<Function> {
 			v = inflater.inflate(viewResourceId, null);
 
 		Function f = functions.get(position);
-		EditText ftext = (EditText) v.findViewById(R.id.litem_editText);
+		EditText fText = (EditText) v.findViewById(R.id.litem_editText);
+		Button delButton = (Button) v.findViewById(R.id.litem_delbutton);
 
-		ftext.setText(f.getFunction());
+		fText.setTag(position);
+		fText.setOnEditorActionListener((FunctionList) parent);
+		fText.setText(f.getFunction());
+		delButton.setTag(position);
+		delButton.setOnClickListener((FunctionList) parent);
 
 		return v;
 	}

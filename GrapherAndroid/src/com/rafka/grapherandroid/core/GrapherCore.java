@@ -29,9 +29,6 @@ public class GrapherCore extends Observable implements Observer {
 
 		fs = new ArrayList<Function>();
 		fs.clear();
-
-		fs.add(new Function(this));
-		fs.get(0).setFunction("x^2");
 	}
 
 	public ArrayList<Function> getFunctionList() {

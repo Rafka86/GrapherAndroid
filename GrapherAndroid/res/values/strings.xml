@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">Grapher</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_edit">Edit</string>
     <string name="litem_checkBox">y=</string>
     <string name="litem_button1">Del</string>

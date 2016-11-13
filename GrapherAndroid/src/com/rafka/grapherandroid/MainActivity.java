@@ -2,6 +2,7 @@ package com.rafka.grapherandroid;
 
 import com.rafka.grapherandroid.core.GrapherCore;
 import com.rafka.grapherandroid.parts.FunctionAdapter;
+import com.rafka.grapherandroid.parts.FunctionList;
 import com.rafka.grapherandroid.parts.GraphSheet;
 
 import android.app.ActionBar;
@@ -11,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 
 public class MainActivity extends Activity {
 	private boolean nowEditScene = false;
@@ -20,14 +20,13 @@ public class MainActivity extends Activity {
 	GraphSheet gs;
 	EditText debug;
 
-	ListView lv;
+	FunctionList flv;
 	FunctionAdapter adapter;
-	Button add;
 
 	private void setMainActivity() {
 		setContentView(R.layout.activity_main);
 
-		debug = (EditText) findViewById(R.id.editText1);
+		debug = (EditText) findViewById(R.id.debug_text);
 		gs = (GraphSheet) findViewById(R.id.graphSheet1);
 
 		gs.setEditText(debug);
@@ -42,10 +41,11 @@ public class MainActivity extends Activity {
 	private void setGraphEditActivity() {
 		setContentView(R.layout.activity_sub);
 
-		lv = (ListView) findViewById(R.id.listView1);
-		add = (Button) findViewById(R.id.add_button);
+		flv = (FunctionList) findViewById(R.id.functionList1);
 
-		lv.setAdapter(adapter);
+		flv.setGrapherCore(gc);
+		flv.setAdapter(adapter);
+		flv.setAddButton((Button) findViewById(R.id.add_button));
 
 		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);

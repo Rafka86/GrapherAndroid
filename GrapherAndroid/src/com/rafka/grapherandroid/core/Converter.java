@@ -1,6 +1,7 @@
 package com.rafka.grapherandroid.core;
 
 import java.util.ArrayDeque;
+import java.util.Locale;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -89,9 +90,9 @@ class Converter {
 				while (i < s.length() && (isNumber(s.charAt(i)) || isAlphabet(s.charAt(i))))
 					i++;
 				buf = s.substring(startIndex, i--);
-				if (isFunction(buf.toUpperCase()))
+				if (isFunction(buf.toUpperCase(Locale.ENGLISH)))
 					expr.add(new Token(TokenType.FNC, buf));
-				else if (isConst(buf.toUpperCase()))
+				else if (isConst(buf.toUpperCase(Locale.ENGLISH)))
 					expr.add(new Token(TokenType.CST, buf));
 				else
 					expr.add(new Token(TokenType.VAR, buf));
