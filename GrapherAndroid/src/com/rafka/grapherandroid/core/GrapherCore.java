@@ -9,6 +9,7 @@ public class GrapherCore extends Observable implements Observer {
 	private final float centerMinusLim = -500.0f;
 	private final float sizeMaxLim = 100.0f;
 	private final float sizeMinLim = 1e-4f;
+	private final int maxFuncsSize = 10;
 
 	private boolean viewSizeFlag;
 
@@ -47,6 +48,14 @@ public class GrapherCore extends Observable implements Observer {
 
 	public Function getFunction(int index) {
 		return fs.get(index);
+	}
+	
+	public int getFunctionsSize() {
+		return fs.size();
+	}
+	
+	public boolean hasSpaceOfNewFunction() {
+		return fs.size() < maxFuncsSize;
 	}
 
 	public void addCenter(float xVal, float yVal) {

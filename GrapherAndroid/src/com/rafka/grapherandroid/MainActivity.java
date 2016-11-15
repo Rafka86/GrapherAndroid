@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 
 public class MainActivity extends Activity {
@@ -45,7 +44,6 @@ public class MainActivity extends Activity {
 
 		flv.setGrapherCore(gc);
 		flv.setAdapter(adapter);
-		flv.setAddButton((Button) findViewById(R.id.add_button));
 
 		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);

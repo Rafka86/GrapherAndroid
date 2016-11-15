@@ -16,24 +16,35 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class FunctionList extends ListView implements OnClickListener, Observer, OnEditorActionListener {
+public class FunctionList extends ListView implements OnClickListener, Observer, OnEditorActionListener, OnCheckedChangeListener {
 	private MainActivity activity;
 	private GrapherCore gc;
 	private FunctionAdapter adapter;
+	
+	private Button addButton;
+	private final int addB_id = 0x00000001;
 
 	public FunctionList(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		activity = (MainActivity) context;
+		addButton = new Button(context, attrs);
+		addButton.setId(addB_id);
+		addButton.setText("Add");
+		addButton.setOnClickListener(this);
 	}
 
 	public void setGrapherCore(GrapherCore gc) {
 		this.gc = gc;
 		this.gc.addObserver(this);
+		if (this.gc.hasSpaceOfNewFunction())
+			addFooterView(addButton);
 	}
 
 	@Override
@@ -42,12 +53,11 @@ public class FunctionList extends ListView implements OnClickListener, Observer,
 		this.adapter = (FunctionAdapter) adapter;
 	}
 
-	public void setAddButton(Button b) {
-		b.setOnClickListener(this);
-	}
-
 	@Override
 	public void update(Observable observable, Object data) {
+		removeFooterView(addButton);
+		if (gc.hasSpaceOfNewFunction())
+			addFooterView(addButton);
 		adapter.notifyDataSetChanged();
 	}
 
@@ -57,7 +67,7 @@ public class FunctionList extends ListView implements OnClickListener, Observer,
 		case R.id.litem_delbutton:
 			gc.removeFunction((Integer) v.getTag());
 			break;
-		case R.id.add_button:
+		case addB_id:
 			gc.addFunction();
 			break;
 		}
@@ -83,6 +93,11 @@ public class FunctionList extends ListView implements OnClickListener, Observer,
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		gc.getFunction((Integer)buttonView.getTag()).setVisible(isChecked);
 	}
 
 }

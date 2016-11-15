@@ -145,6 +145,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 
 	private void drawGraphs(Canvas canvas) {
 		ArrayList<Function> list = gc.getFunctionList();
+		Function tmp;
 		float step = gc.getXSize() / (float) graphReso;
 		FloatBuffer fb = FloatBuffer.allocate(4000);
 
@@ -157,16 +158,19 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		float delta_x = gc.getDeltaX(), delta_y = gc.getDeltaY();
 		fb.clear();
 		for (int i = 0; i < list.size(); i++) {
-			ys = list.get(i).getValues(xs, graphReso);
-			for (int j = 1; j < graphReso; j++) {
-				fb.put((xs[j - 1] - x_base) / delta_x);
-				fb.put((y_base - ys[j - 1]) / delta_y);
-				fb.put((xs[j] - x_base) / delta_x);
-				fb.put((y_base - ys[j]) / delta_y);
+			if (list.get(i).isVisible()) {
+				tmp = list.get(i);
+				ys = tmp.getValues(xs, graphReso);
+				for (int j = 1; j < graphReso; j++) {
+					fb.put((xs[j - 1] - x_base) / delta_x);
+					fb.put((y_base - ys[j - 1]) / delta_y);
+					fb.put((xs[j] - x_base) / delta_x);
+					fb.put((y_base - ys[j]) / delta_y);
+				}
+				paint.setStrokeWidth(2.0f);
+				paint.setColor(tmp.getColor());
+				canvas.drawLines(fb.array(), paint);
 			}
-			paint.setStrokeWidth(2.0f);
-			paint.setColor(Color.BLUE);
-			canvas.drawLines(fb.array(), paint);
 		}
 	}
 
