@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import com.rafka.grapherandroid.MainActivity;
 import com.rafka.grapherandroid.R;
+import com.rafka.grapherandroid.core.Function;
 import com.rafka.grapherandroid.core.GrapherCore;
 
 import android.content.Context;
@@ -97,7 +98,11 @@ public class FunctionList extends ListView implements OnClickListener, Observer,
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		gc.getFunction((Integer)buttonView.getTag()).setVisible(isChecked);
+		Function f = gc.getFunction((Integer)buttonView.getTag());
+		if (!f.getFunction().equals(""))
+			f.setVisible(isChecked);
+		else
+			buttonView.setChecked(false);
 	}
 
 }

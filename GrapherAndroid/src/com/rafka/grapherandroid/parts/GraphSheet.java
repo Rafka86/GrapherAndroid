@@ -39,7 +39,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		activity = (MainActivity) context;
 		sDetector = new ScaleGestureDetector(activity, this);
 
-		paint = new Paint();
+		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		gridSpan = 1.0f;
 		tchStrtX = tchStrtY = 0.0f;
 		xs = new float[graphReso];
