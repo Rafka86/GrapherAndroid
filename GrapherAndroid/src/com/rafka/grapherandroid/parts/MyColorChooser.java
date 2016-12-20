@@ -24,7 +24,7 @@ public class MyColorChooser extends View {
 		activity = (MainActivity)context;
 		paint = new Paint();
 		
-		sg = new SweepGradient();
+		sg = new SweepGradient(0.0f, 0.0f, sg_colors, null);
 	}
 
 	private void drawHueCircle(Canvas canvas) {
