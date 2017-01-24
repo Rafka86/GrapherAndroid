@@ -13,7 +13,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class MyColorChooser extends View {
-	private MainActivity activity;
+	//private MainActivity activity;
 	private Paint hPaint, svPaint;
 
 	private final int[] sg_colors = { 0xFFFF0000, 0xFFFF00FF, 0xFF0000FF, 0xFF00FFFF, 0xFF00FF00, 0xFFFFFF00,
@@ -26,7 +26,7 @@ public class MyColorChooser extends View {
 	public MyColorChooser(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		activity = (MainActivity) context;
+		//activity = (MainActivity) context;
 
 		sg = new SweepGradient(0.0f, 0.0f, sg_colors, null);
 
@@ -37,6 +37,12 @@ public class MyColorChooser extends View {
 		svPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		svPaint.setStyle(Paint.Style.FILL);
 		svPaint.setStrokeWidth(2.0f);
+	}
+	
+	public void setNowColor(int c){
+		float[] hsv = new float[3];
+		Color.colorToHSV(c, hsv);
+		nowHue = hsv[0];
 	}
 
 	private void drawHueCircle(Canvas canvas) {

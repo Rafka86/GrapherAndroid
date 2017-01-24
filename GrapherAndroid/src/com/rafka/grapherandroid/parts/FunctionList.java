@@ -9,6 +9,7 @@ import com.rafka.grapherandroid.core.Function;
 import com.rafka.grapherandroid.core.GrapherCore;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -66,7 +67,8 @@ public class FunctionList extends ListView implements OnClickListener, Observer,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.litem_delbutton:
-			gc.removeFunction((Integer) v.getTag());
+			//gc.removeFunction((Integer) v.getTag());
+			ColorChooserDialog.CreateDialog(Color.RED).show(activity.getFragmentManager(), "def");
 			break;
 		case addB_id:
 			gc.addFunction();
