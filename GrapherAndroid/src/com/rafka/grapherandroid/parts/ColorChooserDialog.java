@@ -36,6 +36,8 @@ public class ColorChooserDialog extends DialogFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup vg, Bundle b) {
 		View content = inflater.inflate(R.layout.dialog_cc, null);
+		MyColorChooser chooser = (MyColorChooser)content.findViewById(R.id.myColorChooser1);
+		chooser.setNowColor(b.getInt("nowColor"));
 		return content;
 	}
 }
