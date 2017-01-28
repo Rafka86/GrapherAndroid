@@ -1,6 +1,6 @@
 package com.rafka.grapherandroid.parts;
 
-import com.rafka.grapherandroid.MainActivity;
+//import com.rafka.grapherandroid.MainActivity;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -38,22 +38,26 @@ public class MyColorChooser extends View {
 		svPaint.setStyle(Paint.Style.FILL);
 		svPaint.setStrokeWidth(2.0f);
 	}
-	
-	public void setNowColor(int c){
+
+	public void setNowColor(int c) {
 		float[] hsv = new float[3];
 		Color.colorToHSV(c, hsv);
 		nowHue = hsv[0];
 	}
 
 	private void drawHueCircle(Canvas canvas) {
+		final float lineWidth = this.getWidth() * 0.1f;
+		final float circleRadius = this.getWidth() * 0.2f * 1.4142136f + lineWidth * 0.2f;
 
+		hPaint.setStrokeWidth(lineWidth);
+		canvas.drawCircle(0.0f, 0.0f, circleRadius, hPaint);
 	}
 
 	private void drawSVSquare(Canvas canvas) {
-		final float squareSize = this.getWidth() / 3.0f;
-		final float xStart = -squareSize / 2.0f;
-		final float xEnd = squareSize / 2.0f;
-		final float yStart = -squareSize / 2.0f;
+		final float squareSize = this.getWidth() * 0.32f;
+		final float xStart = -squareSize * 0.5f;
+		final float xEnd = -xStart;
+		final float yStart = xEnd;
 		final float resolution = 0.01f;
 		lgColors = new int[10];
 
@@ -63,11 +67,11 @@ public class MyColorChooser extends View {
 			for (x = 0.0f, i = 0; i < 10; x += 0.1f, i++) {
 				lgColors[i] = genHSVColor(nowHue, x, y);
 			}
-			LinearGradient lg = new LinearGradient(xStart, yStart + squareSize * y,
-					xEnd, yStart + squareSize * y,
+			LinearGradient lg = new LinearGradient(xStart, yStart - squareSize * y,
+					xEnd, yStart - squareSize * y,
 					lgColors, null, Shader.TileMode.CLAMP);
 			svPaint.setShader(lg);
-			canvas.drawLine(xStart, yStart + squareSize * y, xEnd, yStart + squareSize * y, svPaint);
+			canvas.drawLine(xStart, yStart - squareSize * y, xEnd, yStart - squareSize * y, svPaint);
 		}
 	}
 
@@ -76,8 +80,8 @@ public class MyColorChooser extends View {
 		super.onDraw(canvas);
 		canvas.translate(this.getWidth() / 2.0f, this.getHeight() / 2.0f);
 
-		drawHueCircle(canvas);
 		drawSVSquare(canvas);
+		drawHueCircle(canvas);
 	}
 
 	private int genHSVColor(float hue, float sat, float val) {

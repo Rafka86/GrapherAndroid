@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="InflateParams">
+        <ignore path="src/com/rafka/grapherandroid/parts/ColorChooserDialog.java" />
+    </issue>
     <issue id="OldTargetApi" severity="ignore" />
 </lint>

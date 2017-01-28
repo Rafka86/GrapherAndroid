@@ -6,5 +6,7 @@
     <string name="litem_checkBox">y=</string>
     <string name="litem_button1">Del</string>
     <string name="add_button">Add</string>
+    <string name="dialog_neg">Cancel</string>
+    <string name="dialog_pos">OK</string>
 
 </resources>
