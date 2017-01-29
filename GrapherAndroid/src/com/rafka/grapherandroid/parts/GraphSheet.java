@@ -156,9 +156,9 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		float[] ys;
 		float x_base = gc.getXMin(), y_base = gc.getYMin() + gc.getYSize();
 		float delta_x = gc.getDeltaX(), delta_y = gc.getDeltaY();
-		fb.clear();
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).isVisible()) {
+				fb.clear();
 				tmp = list.get(i);
 				ys = tmp.getValues(xs, graphReso);
 				for (int j = 1; j < graphReso; j++) {

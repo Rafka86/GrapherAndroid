@@ -40,15 +40,22 @@ public class FunctionAdapter extends ArrayAdapter<Function> {
 		CheckBox visCBox = (CheckBox) v.findViewById(R.id.litem_checkBox);
 		EditText fText = (EditText) v.findViewById(R.id.litem_editText);
 		Button delButton = (Button) v.findViewById(R.id.litem_delbutton);
+		Button colorChg = (Button) v.findViewById(R.id.litem_changecolor);
 
 		visCBox.setChecked(f.isVisible());
 		visCBox.setOnCheckedChangeListener((FunctionList) parent);
 		visCBox.setTag(position);
+
 		fText.setTag(position);
 		fText.setOnEditorActionListener((FunctionList) parent);
 		fText.setText(f.getFunction());
+
 		delButton.setTag(position);
 		delButton.setOnClickListener((FunctionList) parent);
+
+		colorChg.setTag(position);
+		colorChg.setOnClickListener((FunctionList) parent);
+		colorChg.setBackgroundColor(f.getColor());
 
 		return v;
 	}

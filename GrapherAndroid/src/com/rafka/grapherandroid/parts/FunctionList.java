@@ -9,7 +9,6 @@ import com.rafka.grapherandroid.core.Function;
 import com.rafka.grapherandroid.core.GrapherCore;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,11 +24,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class FunctionList extends ListView implements OnClickListener, Observer, OnEditorActionListener, OnCheckedChangeListener {
+public class FunctionList extends ListView
+		implements OnClickListener, Observer, OnEditorActionListener, OnCheckedChangeListener {
 	private MainActivity activity;
 	private GrapherCore gc;
 	private FunctionAdapter adapter;
-	
+
 	private Button addButton;
 	private final int addB_id = 0x00000001;
 
@@ -67,8 +67,12 @@ public class FunctionList extends ListView implements OnClickListener, Observer,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.litem_delbutton:
-			//gc.removeFunction((Integer) v.getTag());
-			ColorChooserDialog.CreateDialog(Color.RED).show(activity.getFragmentManager(), "def");
+			gc.removeFunction((Integer) v.getTag());
+			break;
+		case R.id.litem_changecolor:
+			int index = (Integer) v.getTag();
+			ColorChooserDialog.CreateDialog(index, gc.getFunction(index).getColor()).show(activity.getFragmentManager(),
+					"ccd");
 			break;
 		case addB_id:
 			gc.addFunction();
@@ -100,7 +104,7 @@ public class FunctionList extends ListView implements OnClickListener, Observer,
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		Function f = gc.getFunction((Integer)buttonView.getTag());
+		Function f = gc.getFunction((Integer) buttonView.getTag());
 		if (!f.getFunction().equals(""))
 			f.setVisible(isChecked);
 		else

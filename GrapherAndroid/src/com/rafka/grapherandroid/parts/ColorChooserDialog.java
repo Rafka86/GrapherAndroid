@@ -1,5 +1,6 @@
 package com.rafka.grapherandroid.parts;
 
+import com.rafka.grapherandroid.MainActivity;
 import com.rafka.grapherandroid.R;
 
 import android.app.Dialog;
@@ -14,17 +15,19 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 public class ColorChooserDialog extends DialogFragment implements OnClickListener {
+	MainActivity activity;
 	MyColorChooser mChooser;
 
 	public ColorChooserDialog() {
 	}
 
 	//Creation Method
-	public static ColorChooserDialog CreateDialog(int nowColor) {
+	public static ColorChooserDialog CreateDialog(int index, int nowColor) {
 		ColorChooserDialog dialog = new ColorChooserDialog();
 
 		Bundle args = new Bundle();
 		args.putInt("nowColor", nowColor);
+		args.putInt("index", index);
 
 		dialog.setArguments(args);
 
@@ -45,6 +48,8 @@ public class ColorChooserDialog extends DialogFragment implements OnClickListene
 		lp.width = dialogWidth;
 		lp.height = dialogHeight;
 		dialog.getWindow().setAttributes(lp);
+
+		activity = (MainActivity) getActivity();
 	}
 
 	@Override
@@ -81,6 +86,8 @@ public class ColorChooserDialog extends DialogFragment implements OnClickListene
 			this.dismiss();
 			break;
 		case R.id.dialog_positive:
+			int index = getArguments().getInt("index");
+			activity.getGrapherCore().getFunction(index).setColor(mChooser.getColor());
 			this.dismiss();
 			break;
 		}
