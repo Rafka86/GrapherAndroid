@@ -35,6 +35,8 @@ public class MainActivity extends Activity {
 		ab.setDisplayHomeAsUpEnabled(false);
 		nowEditScene = false;
 		invalidateOptionsMenu();
+
+		debug.setVisibility(0);
 	}
 
 	private void setGraphEditActivity() {
@@ -89,7 +91,7 @@ public class MainActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	public GrapherCore getGrapherCore() {
 		return gc;
 	}

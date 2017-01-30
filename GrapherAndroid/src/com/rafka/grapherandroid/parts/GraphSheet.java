@@ -1,6 +1,7 @@
 package com.rafka.grapherandroid.parts;
 
 import java.nio.FloatBuffer;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -13,7 +14,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -24,7 +27,7 @@ import android.widget.EditText;
 public class GraphSheet extends View implements Observer, OnScaleGestureListener {
 	private MainActivity activity;
 	private GrapherCore gc;
-	private Paint paint;
+	private Paint paint, textP, tchP;
 
 	private ScaleGestureDetector sDetector;
 	private EditText et1;
@@ -33,6 +36,9 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 	private float tchStrtX, tchStrtY;
 	private int graphReso = 100;
 	private float[] xs;
+	private float tchX, tchY;
+
+	private DecimalFormat df;
 
 	public GraphSheet(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -43,6 +49,22 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		gridSpan = 1.0f;
 		tchStrtX = tchStrtY = 0.0f;
 		xs = new float[graphReso];
+
+		textP = new Paint(Paint.ANTI_ALIAS_FLAG);
+		textP.setStyle(Style.FILL_AND_STROKE);
+		textP.setStrokeWidth(2.0f);
+		textP.setTextSize(20.0f);
+		textP.setColor(Color.BLACK);
+
+		df = new DecimalFormat("#.#");
+		df.setMaximumIntegerDigits(3);
+		df.setMaximumFractionDigits(5);
+
+		tchP = new Paint(Paint.ANTI_ALIAS_FLAG);
+		tchP.setStyle(Style.STROKE);
+		tchP.setStrokeWidth(2.0f);
+		tchP.setColor(Color.HSVToColor(new float[] { 0.0f, 0.5f, 1.0f }));
+		tchP.setPathEffect(new DashPathEffect(new float[] { 5.0f, 5.0f }, 0.0f));
 	}
 
 	public void setGraphCore(GrapherCore gc) {
@@ -95,48 +117,72 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		fb.clear();
 
 		//グリッドの描画
-		for (float i = yAxP; i > 0.0f; i -= gridSpanPix) {
-			if (i <= 0.0f)
+		float coordinate = 0.0f;
+		for (float i = yAxP; i > 0.0f; i -= gridSpanPix, coordinate -= gridSpan) {
+			if (i <= 0.0f) {
 				break;
-			else if (i > width)
+			} else if (i > width) {
 				i -= gridSpanPix * (int) ((i - width) / gridSpanPix);
+				coordinate -= (int) ((yAxP - i) / gridSpanPix) * gridSpan;
+			}
 			fb.put(i);
 			fb.put(0.0f);
 			fb.put(i);
 			fb.put(height);
+
+			canvas.drawText(df.format(coordinate), i, 20.0f, textP);
+			canvas.drawText(df.format(coordinate), i, height, textP);
 		}
 
-		for (float i = yAxP; i < width; i += gridSpanPix) {
-			if (i >= width)
+		coordinate = 0.0f;
+		for (float i = yAxP; i < width; i += gridSpanPix, coordinate += gridSpan) {
+			if (i >= width) {
 				break;
-			else if (i < 0.0f)
+			} else if (i < 0.0f) {
 				i += gridSpanPix * (int) (-i / gridSpanPix);
+				coordinate += (int) ((i - yAxP) / gridSpanPix) * gridSpan;
+			}
 			fb.put(i);
 			fb.put(0.0f);
 			fb.put(i);
 			fb.put(height);
+
+			canvas.drawText(df.format(coordinate), i, 20.0f, textP);
+			canvas.drawText(df.format(coordinate), i, height, textP);
 		}
 
-		for (float i = xAyP; i < height; i += gridSpanPix) {
-			if (i >= height)
+		coordinate = 0.0f;
+		for (float i = xAyP; i < height; i += gridSpanPix, coordinate -= gridSpan) {
+			if (i >= height) {
 				break;
-			else if (i < 0.0f)
+			} else if (i < 0.0f) {
 				i += gridSpanPix * (int) (-i / gridSpanPix);
+				coordinate -= (int) ((i - xAyP) / gridSpanPix) * gridSpan;
+			}
 			fb.put(0.0f);
 			fb.put(i);
 			fb.put(width);
 			fb.put(i);
+
+			canvas.drawText(df.format(coordinate), 0.0f, i, textP);
+			canvas.drawText(df.format(coordinate), width - 25.0f, i, textP);
 		}
 
-		for (float i = xAyP; i > 0.0f; i -= gridSpanPix) {
-			if (i <= 0.0f)
+		coordinate = 0.0f;
+		for (float i = xAyP; i > 0.0f; i -= gridSpanPix, coordinate += gridSpan) {
+			if (i <= 0.0f) {
 				break;
-			else if (i > height)
+			} else if (i > height) {
 				i -= gridSpanPix * (int) ((i - height) / gridSpanPix);
+				coordinate += (int) ((xAyP - i) / gridSpanPix) * gridSpan;
+			}
 			fb.put(0.0f);
 			fb.put(i);
 			fb.put(width);
 			fb.put(i);
+
+			canvas.drawText(df.format(coordinate), 0.0f, i, textP);
+			canvas.drawText(df.format(coordinate), width - 25.0f, i, textP);
 		}
 
 		paint.setStrokeWidth(1.0f);
@@ -174,12 +220,33 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		}
 	}
 
+	private void drawTouchLine(Canvas canvas) {
+		float drawX, drawY;
+		drawX = (tchX - gc.getXMin()) / gc.getDeltaX();
+		drawY = (gc.getYMin() + gc.getYSize() - tchY) / gc.getDeltaY();
+
+		FloatBuffer fb = FloatBuffer.allocate(20);
+		fb.clear();
+		fb.put(0.0f);
+		fb.put(drawY);
+		fb.put(gc.getViewWidth());
+		fb.put(drawY);
+		fb.put(drawX);
+		fb.put(0.0f);
+		fb.put(drawX);
+		fb.put(gc.getViewHeight());
+		canvas.drawLines(fb.array(), tchP);
+		canvas.drawText("(" + df.format(tchX) + "," + df.format(tchY) + ")", drawX, drawY, textP);
+	}
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
 		drawGrid(canvas);
 		drawGraphs(canvas);
+		if (!floatIsZero(tchX) || !floatIsZero(tchY))
+			drawTouchLine(canvas);
 	}
 
 	@SuppressLint("ClickableViewAccessibility")
@@ -196,6 +263,8 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 			case MotionEvent.ACTION_DOWN:
 				tchStrtX = event.getX();
 				tchStrtY = event.getY();
+				tchX = tchStrtX * gc.getDeltaX() + gc.getXMin();
+				tchY = gc.getYMin() + gc.getYSize() - tchStrtY * gc.getDeltaY();
 				break;
 			case MotionEvent.ACTION_MOVE: {
 				float moveX = (tchStrtX - event.getX()) / (gc.getViewWidth() / 2.0f);
@@ -208,6 +277,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 				break;
 			case MotionEvent.ACTION_CANCEL:
 				tchStrtX = tchStrtY = 0.0f;
+				tchX = tchY = 0.0f;
 				break;
 			}
 		}
@@ -240,4 +310,7 @@ public class GraphSheet extends View implements Observer, OnScaleGestureListener
 		invalidate();
 	}
 
+	private boolean floatIsZero(float val) {
+		return -Float.MIN_VALUE * 1e5 < val && val < Float.MIN_VALUE * 1e5;
+	}
 }
